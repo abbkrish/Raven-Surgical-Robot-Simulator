@@ -1,0 +1,48 @@
+#!/usr/bin/env python
+import roslib
+roslib.load_manifest('raven_2')
+import rospy
+from std_msgs.msg import String
+from raven_2.msg import raven_state
+import socket
+import sys
+from db import Mysql
+
+idx = 1;
+def callback(data):
+    rospy.loginfo(rospy.get_caller_id() + "I heard %s", data) 
+     db._open()
+    global idx;
+    db._insert('raven_state', id=idx, 
+			jpos0=data.jpos[0],
+			jpos1=data.jpos[1],
+			jpos2=data.jpos[2],
+			jpos3=data.jpos[3],
+			jpos4=data.jpos[4],
+			jpos5=data.jpos[5],
+			jpos6=data.jpos[6],
+			jpos7=data.jpos[7],
+			jpos8=data.jpos[8],
+			jpos9=data.jpos[9],
+			jpos10=data.jpos[10],
+			jpos11=data.jpos[11],
+			jpos12=data.jpos[12],
+			jpos13=data.jpos[13],
+			jpos14=data.jpos[14],
+			jpos15=data.jpos[15])
+    idx += 1
+    db._commit()
+			
+
+    
+def subscriber():
+    rospy.init_node('raven_state_subscriber', anonymous=True)
+
+    rospy.Subscriber("/ravenstate", raven_state, callback)
+
+
+    rospy.spin()
+
+if __name__ == '__main__':
+    db = Mysql(host='130.126.140.209', user='root', password='Netlab1',database='raven')
+    subscriber()
